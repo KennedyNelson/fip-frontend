@@ -36,7 +36,7 @@ function BatchExpansion() {
   const router = useRouter();
   const [cartItems, setCartItems] = useState([]);
   const [allItemsAdded, setAllItemsAdded] = useState(false);
-  const [queryParamNotAdded, setQueryParamNotAdded] = useState(true)
+  const [queryParamNotAdded, setQueryParamNotAdded] = useState(true);
   const [quantities, setQuantities] = useState([]);
   const [addedToCart, setAddedToCart] = useState({});
   const [data, setData] = useState([]);
@@ -44,31 +44,28 @@ function BatchExpansion() {
   const [foodPrice, setFoodPrice] = useState(" ");
   const [id, setId] = useState(" ");
 
-
   const addToCart = (id, foodName, foodPrice) => {
     console.log(`Addinggg to cart: ${foodName} - ${foodPrice}`);
 
-    const newDish = {id: id, name: foodName, price: foodPrice };
-  
+    const newDish = { id: id, name: foodName, price: foodPrice };
+
     if (!addedToCart[id]) {
       setCartItems((prevItems) => [...prevItems, newDish]);
       setAddedToCart((prevAdded) => ({ ...prevAdded, [id]: true }));
     }
   };
-  
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("http://127.0.0.1:5000/list_food");
-  
+
         if (!response.ok) {
           throw new Error("Network request failed");
         }
-  
+
         const result = await response.json();
-  
+
         const displayOrders = result.map((item, index) => ({
           id: index,
           foodName: item.name,
@@ -85,17 +82,16 @@ function BatchExpansion() {
             </div>
           ),
         }));
-        
+
         setData(displayOrders);
       } catch (error) {
         console.log(error);
       }
     };
-    
+
     fetchData();
   }, []);
-  
-   
+
   useEffect(() => {
     const { cartItems: cartItemsQuery } = router.query;
     const parsedCartItems = cartItemsQuery ? JSON.parse(cartItemsQuery) : [];
@@ -103,10 +99,13 @@ function BatchExpansion() {
       setCartItems((prevItems) => [...prevItems, ...parsedCartItems]);
       setQueryParamNotAdded(true);
     }
-  
     if (allItemsAdded) {
       router.push({
-        pathname: "/consumer/CP",
+        pathname: `${
+          router.pathname === "/service-provider/add-order"
+            ? "/service-provider/CP"
+            : "/consumer/CP"
+        }`,
         query: {
           cartItems: JSON.stringify(cartItems),
           quantities: quantities,
@@ -116,24 +115,15 @@ function BatchExpansion() {
       });
     }
   }, [allItemsAdded, router]);
-  
-  
 
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
- 
-
   const handleGoToCart = () => {
-
     setAllItemsAdded(true);
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
   };
-
-
-
-
 
   return (
     <div
@@ -146,7 +136,6 @@ function BatchExpansion() {
         padding: "90px",
       }}
     >
-      
       <DataTable
         rows={data}
         headers={headers}
@@ -168,67 +157,70 @@ function BatchExpansion() {
               height: "100vh",
             }}
           >
-          
-              <TableContainer
-                title="Order your Favourite Food"
-                description=""
-                {...getTableContainerProps()}
-              >
-                <Table {...getTableProps()} aria-label="sample table">
-                  <TableHead>
-                    <TableRow>
-                      <TableExpandHeader
-                        enableToggle={true}
-                        {...getExpandHeaderProps()}
-                      />
-                      {headers.map((header, i) => (
-                        <TableHeader
-                          key={i}
-                          {...getHeaderProps({
-                            header,
-                          })}
-                        >
-                          {header.header}
-                        </TableHeader>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.map((row) => (
-                      <React.Fragment key={row.id}>
-                        <TableExpandRow
-                          {...getRowProps({
-                            row,
-                          })}
-                        >
-                          {row.cells.map((cell) => (
-                            <TableCell key={cell.id}>{cell.value}</TableCell>
-                          ))}
-                        </TableExpandRow>
-                        <TableExpandedRow
-                          colSpan={headers.length + 1}
-                          className="demo-expanded-td"
-                          {...getExpandedRowProps({
-                            row,
-                          })}
-                        >
-                          <h6>About the dish</h6>
-                          <div>Lorem Ipsum is simply dummy text </div> <br></br>
-                        </TableExpandedRow>
-                      </React.Fragment>
+            <TableContainer
+              title="Order your Favourite Food"
+              description=""
+              {...getTableContainerProps()}
+            >
+              <Table {...getTableProps()} aria-label="sample table">
+                <TableHead>
+                  <TableRow>
+                    <TableExpandHeader
+                      enableToggle={true}
+                      {...getExpandHeaderProps()}
+                    />
+                    {headers.map((header, i) => (
+                      <TableHeader
+                        key={i}
+                        {...getHeaderProps({
+                          header,
+                        })}
+                      >
+                        {header.header}
+                      </TableHeader>
                     ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <div
-                style={{
-                  width: "800px",
-                  paddingTop: "1rem",
-                }}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <React.Fragment key={row.id}>
+                      <TableExpandRow
+                        {...getRowProps({
+                          row,
+                        })}
+                      >
+                        {row.cells.map((cell) => (
+                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                        ))}
+                      </TableExpandRow>
+                      <TableExpandedRow
+                        colSpan={headers.length + 1}
+                        className="demo-expanded-td"
+                        {...getExpandedRowProps({
+                          row,
+                        })}
+                      >
+                        <h6>About the dish</h6>
+                        <div>Lorem Ipsum is simply dummy text </div> <br></br>
+                      </TableExpandedRow>
+                    </React.Fragment>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <div
+              style={{
+                width: "800px",
+                paddingTop: "1rem",
+              }}
+            >
+              <Button
+                onClick={handleGoToCart}
+                style={{ backgroundColor: "#640aa8" }}
               >
-                <Button onClick={handleGoToCart} style={{ backgroundColor: "#640aa8", }}>Go to Cart</Button>
-              </div>
-
+                Go to Cart
+              </Button>
+            </div>
           </div>
         )}
       />
@@ -237,4 +229,3 @@ function BatchExpansion() {
 }
 
 export default BatchExpansion;
-

@@ -89,7 +89,7 @@ function WithInteractiveItemsAndActions() {
   const handleGoBackToOrderPage = () => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
     router.push({
-      pathname: "/consumer",
+      pathname: "/service-provider/add-order",
       query: {
         cartItems: JSON.stringify(cartItems),
         quantities: quantities,
@@ -180,7 +180,7 @@ function WithInteractiveItemsAndActions() {
       }
 
       console.log("Order successfully submitted!");
-      router.push("/consumer/vo");
+      router.push("/service-provider/orders");
     } catch (error) {
       console.error("Error during fetch:", error);
     }
@@ -227,40 +227,38 @@ function WithInteractiveItemsAndActions() {
   const { dishId, dishName, dishPrice } = router.query;
 
   return (
-    <div>
-      <Theme theme="white">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            height: "100vh",
-            width: "80%",
-            margin: "auto",
-            padding: "90px",
-          }}
-        >
-          <Theme theme="g10">
-            <ContainedList label="Yours Orders" kind="on-page" action={""}>
-              {renderCartItems()}
-            </ContainedList>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginTop: "3%",
-              }}
-            >
-              <Button onClick={handleGoBackToOrderPage} style={ButtonStyle}>
-                Go Back to Order Page
-              </Button>
-              <Button onClick={handleConfirmOrder} style={ButtonStyle}>
-                Confirm Order{" "}
-              </Button>
-            </div>
-          </Theme>
-        </div>
-      </Theme>
-    </div>
+    <Theme theme="g90">
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100vh",
+          width: "80%",
+          margin: "auto",
+          padding: "90px",
+        }}
+      >
+        <Theme theme="g90">
+          <ContainedList label="Yours Orders" kind="on-page" action={""}>
+            {renderCartItems()}
+          </ContainedList>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: "3%",
+            }}
+          >
+            <Button onClick={handleGoBackToOrderPage} style={ButtonStyle}>
+              Go Back to Order Page
+            </Button>
+            <Button onClick={handleConfirmOrder} style={ButtonStyle}>
+              Confirm Order{" "}
+            </Button>
+          </div>
+        </Theme>
+      </div>
+    </Theme>
   );
 }
 
