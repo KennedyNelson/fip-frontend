@@ -25,7 +25,9 @@ const NavBar = () => {
   const router = useRouter();
   const handleLogout = async () => {
     await dispatch(signOut());
-    router.push("/");
+    router.pathname.startsWith("/service-provider")
+      ? router.push("/")
+      : router.push("/consumer/login");
   };
 
   return (
