@@ -77,10 +77,10 @@ function BatchExpansion() {
             <div style={{ padding: "1rem", textAlign: "center" }}>
               <Button
                 style={{ backgroundColor: "#640aa8" }}
-                onClick={() => addToCart(id, item.name, item.price)}
-                disabled={addedToCart[id]}
+                onClick={() => addToCart(index, item.name, item.price)}
+                disabled={addedToCart[index]}
               >
-                {addedToCart[id] ? "Added to Cart" : "Add to Cart"}
+                {addedToCart[index] ? "Added to Cart" : "Add to Cart"}
               </Button>
             </div>
           ),
@@ -93,7 +93,7 @@ function BatchExpansion() {
     };
     
     fetchData();
-  }, []);
+  }, [addedToCart]);
   
    
   useEffect(() => {
